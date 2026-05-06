@@ -1,0 +1,20 @@
+:root {
+  --green-dark: #1a2e1a;
+  --green-mid: #2d4a2d;
+  --lime: #c8f135;
+  --lime-muted: #eefaab;
+  --text: #1a2e1a;
+  --text-muted: #5a6b5a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f7f7f5;
+  color: var(--text);
+}
