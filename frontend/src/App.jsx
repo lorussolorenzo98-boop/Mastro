@@ -5,6 +5,8 @@ import ProfessionalsPage from './pages/ProfessionalsPage'
 import ProfessionalDetailPage from './pages/ProfessionalDetailPage'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
+import DashboardClientePage from './pages/DashboardClientePage'
+
 
 
 function App() {
@@ -17,6 +19,7 @@ function App() {
         <Route path="/professionals/:id" element={<ProfessionalDetailPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<DashboardClientePage />} />
       </Routes>
     </BrowserRouter>
   )
