@@ -6,7 +6,10 @@ import ProfessionalDetailPage from './pages/ProfessionalDetailPage'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import DashboardClientePage from './pages/DashboardClientePage'
-
+import BookingPage from './pages/BookingPage'
+import ThankYouPage from './pages/ThankYouPage'
+import DashboardProfessionistPage from './pages/DashboardProfessionistPage'
+import CreaProfiloPage from './pages/CreaProfiloPage'
 
 
 function App() {
@@ -20,6 +23,10 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<DashboardClientePage />} />
+        <Route path="/booking/:id" element={<BookingPage />} />
+        <Route path="/thank-you" element={<ThankYouPage />} />
+        <Route path="/dashboard/professional" element={<DashboardProfessionistPage />} />
+        <Route path="/crea-profilo" element={<CreaProfiloPage />} />
       </Routes>
     </BrowserRouter>
   )
