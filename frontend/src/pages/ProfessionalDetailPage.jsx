@@ -39,13 +39,19 @@ function ProfessionalDetailPage() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1000px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
-      
+
       {/* COLONNA SINISTRA */}
       <div>
         {/* HEADER PROFILO */}
         <div style={{ background: '#fff', border: '1px solid rgba(26,46,26,0.12)', borderRadius: '10px', padding: '24px', display: 'flex', gap: '20px', marginBottom: '16px' }}>
-          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--green-dark)', color: 'var(--lime)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', fontWeight: '500', flexShrink: 0 }}>
-            {professional.userId?.firstname?.[0]}{professional.userId?.surname?.[0]}
+          <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: 'var(--green-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {professional.userId?.avatar ? (
+              <img src={professional.userId.avatar} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              <span style={{ color: 'var(--lime)', fontSize: '28px', fontWeight: '500' }}>
+                {professional.userId?.firstname?.[0]}{professional.userId?.surname?.[0]}
+              </span>
+            )}
           </div>
           <div>
             <h1 style={{ fontSize: '22px', fontWeight: '500', color: 'var(--text)', marginBottom: '4px' }}>

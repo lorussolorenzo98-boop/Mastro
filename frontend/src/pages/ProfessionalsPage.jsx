@@ -44,7 +44,7 @@ function ProfessionalsPage() {
 
   return (
     <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
-      
+
       {/* FILTRI */}
       <div style={{ background: '#fff', border: '1px solid rgba(26,46,26,0.12)', borderRadius: '10px', padding: '20px', marginBottom: '24px', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
         <div>
@@ -98,9 +98,15 @@ function ProfessionalsPage() {
             <div key={pro._id}
               onClick={() => navigate(`/professionals/${pro._id}`)}
               style={{ background: '#fff', border: '1px solid rgba(26,46,26,0.12)', borderRadius: '10px', padding: '18px', cursor: 'pointer' }}>
-              
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--green-dark)', color: 'var(--lime)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', fontWeight: '500', marginBottom: '12px' }}>
-                {pro.userId?.firstname?.[0]}{pro.userId?.surname?.[0]}
+
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', overflow: 'hidden', marginBottom: '12px', background: 'var(--green-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {pro.userId?.avatar ? (
+                  <img src={pro.userId.avatar} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span style={{ color: 'var(--lime)', fontSize: '16px', fontWeight: '500' }}>
+                    {pro.userId?.firstname?.[0]}{pro.userId?.surname?.[0]}
+                  </span>
+                )}
               </div>
 
               <div style={{ fontSize: '15px', fontWeight: '500', color: 'var(--text)', marginBottom: '2px' }}>

@@ -18,14 +18,12 @@ function CreaProfiloPage() {
   useEffect(() => {
     if (!token) { navigate('/login'); return }
     if (user?.role !== 'professional') { navigate('/'); return }
-    
-    // controlla se ha già un profilo
+
     const checkProfile = async () => {
       try {
         await axios.get('http://localhost:3000/api/professionals/me', {
           headers: { Authorization: `Bearer ${token}` }
         })
-        // ha già un profilo, vai alla dashboard
         navigate('/dashboard/professional')
       } catch {
         // non ha profilo, rimani qui
@@ -42,6 +40,7 @@ function CreaProfiloPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
+
     try {
       await axios.post('http://localhost:3000/api/professionals',
         { ...formData, hourlyRate: Number(formData.hourlyRate) },
@@ -60,10 +59,10 @@ function CreaProfiloPage() {
       <div style={{ background: '#fff', border: '1px solid rgba(26,46,26,0.12)', borderRadius: '10px', padding: '32px', width: '100%', maxWidth: '480px' }}>
 
         <h1 style={{ fontSize: '22px', fontWeight: '500', color: 'var(--text)', marginBottom: '8px' }}>
-          Crea il tuo profilo
+          Crea il tuo primo annuncio
         </h1>
         <p style={{ fontSize: '14px', color: '#5a6b5a', marginBottom: '24px' }}>
-          Completa il tuo profilo per iniziare a ricevere prenotazioni
+          Inserisci i dettagli del servizio che offri per iniziare a ricevere prenotazioni
         </p>
 
         {error && (
@@ -109,7 +108,7 @@ function CreaProfiloPage() {
 
           <button type="submit" disabled={loading}
             style={{ width: '100%', background: 'var(--lime)', color: 'var(--green-dark)', border: 'none', borderRadius: '6px', padding: '12px', fontSize: '15px', fontWeight: '500', cursor: 'pointer' }}>
-            {loading ? 'Salvataggio...' : 'Crea profilo'}
+            {loading ? 'Salvataggio...' : 'Crea annuncio'}
           </button>
         </form>
       </div>

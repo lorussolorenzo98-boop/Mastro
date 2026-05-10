@@ -9,24 +9,23 @@ router.get('/', async (req, res) => {
     try {
         const {category, city, minRate, maxRate} = req.query
 
-        //costruzione filtro dinamico
         const filter = {}
         if (category) filter.category = category
         if (city) filter.city = { $regex: city, $options: 'i'}
         if (minRate || maxRate) {
             filter.hourlyRate = {}
-            if (minRate) filter.hourlyRate.$gte = Number (minRate)
-            if (maxRate) filter.hourlyRate.$gte = Number (maxRate)
+            if (minRate) filter.hourlyRate.$gte = Number(minRate)
+            if (maxRate) filter.hourlyRate.$lte = Number(maxRate)
         }
         
-        const professionals = await Professional.find(filter).populate('userId', 'firstname surname email')
+        const professionals = await Professional.find(filter).populate('userId', 'firstname surname email avatar')
         res.json(professionals)
     } catch (error) {
         res.status(500).json({message: 'Errore del server', error: error.message})
     }
 })
 
-// GET /api/professionals/me - profilo del professionista loggato
+// GET /me - profilo del professionista loggato
 router.get('/me', authMiddleware, async (req, res) => {
     try {
         const professional = await Professional.findOne({ userId: req.user.id })
@@ -39,10 +38,10 @@ router.get('/me', authMiddleware, async (req, res) => {
     }
 })
 
-//GET - singola pagina di dettaglio di un professionista
+//GET - singola pagina di dettaglio
 router.get('/:id', async (req, res)=> {
     try {
-        const professional = await Professional.findById(req.params.id).populate('userId', 'firstname surname email')
+        const professional = await Professional.findById(req.params.id).populate('userId', 'firstname surname email avatar')
         if (!professional) {
             return res.status(400).json({ message: 'Professionista non trovato'})
         } 
@@ -52,10 +51,10 @@ router.get('/:id', async (req, res)=> {
     }
 })
 
-// POST /api/professionals - crea profilo professionista
+// POST - crea profilo professionista
 router.post('/', authMiddleware, async (req, res) => {
     try {
-        const { category, bio, city, hourlyRate } = req.body
+        const { category, bio, city, hourlyRate, avatar } = req.body
 
         const existing = await Professional.findOne({ userId: req.user.id })
         if (existing) {
@@ -68,9 +67,9 @@ router.post('/', authMiddleware, async (req, res) => {
             bio,
             city,
             hourlyRate,
+            avatar: avatar || '',
             rating: 0,
             reviewsCount: 0,
-            avatar: '',
             availability: []
         })
 
@@ -81,7 +80,5 @@ router.post('/', authMiddleware, async (req, res) => {
         res.status(500).json({ message: 'Errore del server', error: error.message })
     }
 })
-
-
 
 export default router
