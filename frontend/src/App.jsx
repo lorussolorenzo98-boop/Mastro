@@ -10,6 +10,8 @@ import BookingPage from './pages/BookingPage'
 import ThankYouPage from './pages/ThankYouPage'
 import DashboardProfessionistPage from './pages/DashboardProfessionistPage'
 import CreaProfiloPage from './pages/CreaProfiloPage'
+import ProfiloPage from './pages/ProfiloPage'
+
 
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
         <Route path="/thank-you" element={<ThankYouPage />} />
         <Route path="/dashboard/professional" element={<DashboardProfessionistPage />} />
         <Route path="/crea-profilo" element={<CreaProfiloPage />} />
+        <Route path="/profilo" element={<ProfiloPage />} />
       </Routes>
     </BrowserRouter>
   )
