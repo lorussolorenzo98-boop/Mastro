@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function CreaProfiloPage() {
   const { user, token } = useAuth()
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({
@@ -54,11 +56,28 @@ function CreaProfiloPage() {
     }
   }
 
-  return (
-    <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-      <div style={{ background: '#fff', border: '1px solid rgba(26,46,26,0.12)', borderRadius: '10px', padding: '32px', width: '100%', maxWidth: '480px' }}>
+  const inputStyle = {
+    width: '100%',
+    padding: '10px 12px',
+    borderRadius: '6px',
+    border: '0.5px solid rgba(26,46,26,0.18)',
+    fontSize: '14px',
+    boxSizing: 'border-box',
+  }
 
-        <h1 style={{ fontSize: '22px', fontWeight: '500', color: 'var(--text)', marginBottom: '8px' }}>
+  return (
+    <div style={{ minHeight: '100vh', background: '#f0f4ee', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '16px' : '24px' }}>
+
+      <div style={{
+        background: '#fff',
+        border: '0.5px solid rgba(26,46,26,0.14)',
+        borderRadius: '12px',
+        padding: isMobile ? '20px' : '32px',
+        width: '100%',
+        maxWidth: '480px',
+      }}>
+
+        <h1 style={{ fontSize: isMobile ? '18px' : '22px', fontWeight: '500', color: '#0e1e0e', marginBottom: '8px' }}>
           Crea il tuo primo annuncio
         </h1>
         <p style={{ fontSize: '14px', color: '#5a6b5a', marginBottom: '24px' }}>
@@ -66,7 +85,7 @@ function CreaProfiloPage() {
         </p>
 
         {error && (
-          <div style={{ background: '#fff0f0', border: '1px solid #ffcccc', borderRadius: '6px', padding: '12px', fontSize: '14px', color: '#cc0000', marginBottom: '16px' }}>
+          <div style={{ background: '#FCEBEB', border: '0.5px solid #F09595', borderRadius: '6px', padding: '12px', fontSize: '14px', color: '#A32D2D', marginBottom: '16px' }}>
             {error}
           </div>
         )}
@@ -74,8 +93,7 @@ function CreaProfiloPage() {
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '12px' }}>
             <label style={{ fontSize: '13px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Categoria</label>
-            <select name="category" value={formData.category} onChange={handleChange} required
-              style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px' }}>
+            <select name="category" value={formData.category} onChange={handleChange} required style={inputStyle}>
               <option value="">Seleziona una categoria</option>
               <option value="idraulico">Idraulico</option>
               <option value="elettricista">Elettricista</option>
@@ -88,29 +106,28 @@ function CreaProfiloPage() {
           <div style={{ marginBottom: '12px' }}>
             <label style={{ fontSize: '13px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Città</label>
             <input name="city" value={formData.city} onChange={handleChange} required
-              placeholder="Es. Milano"
-              style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px' }} />
+              placeholder="Es. Milano" style={inputStyle} />
           </div>
 
           <div style={{ marginBottom: '12px' }}>
             <label style={{ fontSize: '13px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Tariffa oraria (€)</label>
             <input name="hourlyRate" type="number" value={formData.hourlyRate} onChange={handleChange} required
-              placeholder="Es. 45"
-              style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px' }} />
+              placeholder="Es. 45" style={inputStyle} />
           </div>
 
           <div style={{ marginBottom: '24px' }}>
             <label style={{ fontSize: '13px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Bio</label>
             <textarea name="bio" value={formData.bio} onChange={handleChange} required
               placeholder="Descrivi la tua esperienza e i servizi che offri..."
-              style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px', height: '100px', resize: 'none' }} />
+              style={{ ...inputStyle, height: '100px', resize: 'none' }} />
           </div>
 
           <button type="submit" disabled={loading}
-            style={{ width: '100%', background: 'var(--lime)', color: 'var(--green-dark)', border: 'none', borderRadius: '6px', padding: '12px', fontSize: '15px', fontWeight: '500', cursor: 'pointer' }}>
+            style={{ width: '100%', background: '#c8f135', color: '#0e1e0e', border: 'none', borderRadius: '6px', padding: '12px', fontSize: '15px', fontWeight: '500', cursor: 'pointer' }}>
             {loading ? 'Salvataggio...' : 'Crea annuncio'}
           </button>
         </form>
+
       </div>
     </div>
   )

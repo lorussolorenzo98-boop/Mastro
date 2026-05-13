@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Footer from '../components/Footer'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function ProfessionalsPage() {
   const [professionals, setProfessionals] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
 
   const category = searchParams.get('category') || ''
   const city = searchParams.get('city') || ''
@@ -49,24 +51,24 @@ function ProfessionalsPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f0f4ee', display: 'flex', flexDirection: 'column' }}>
 
-      <div style={{ flex: 1, maxWidth: '1100px', width: '100%', margin: '0 auto', padding: '24px' }}>
+      <div style={{ flex: 1, maxWidth: '1100px', width: '100%', margin: '0 auto', padding: isMobile ? '16px' : '24px' }}>
 
         {/* FILTRI */}
         <div style={{
           background: '#fff',
           border: '0.5px solid rgba(26,46,26,0.14)',
           borderRadius: '10px',
-          padding: '16px 20px',
+          padding: isMobile ? '14px' : '16px 20px',
           marginBottom: '20px',
-          display: 'flex',
-          gap: '12px',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr 1fr' : 'auto auto auto auto auto',
+          gap: '10px',
           alignItems: 'flex-end',
         }}>
           <div>
             <label style={{ fontSize: '11px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Categoria</label>
             <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)}
-              style={{ padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', background: '#fff', color: '#0e1e0e' }}>
+              style={{ width: '100%', padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', background: '#fff', color: '#0e1e0e', boxSizing: 'border-box' }}>
               <option value="">Tutte</option>
               <option value="idraulico">Idraulico</option>
               <option value="elettricista">Elettricista</option>
@@ -78,20 +80,20 @@ function ProfessionalsPage() {
           <div>
             <label style={{ fontSize: '11px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Città</label>
             <input type="text" placeholder="Es. Milano" value={filterCity} onChange={e => setFilterCity(e.target.value)}
-              style={{ padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', width: '140px' }} />
+              style={{ width: '100%', padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', boxSizing: 'border-box' }} />
           </div>
           <div>
             <label style={{ fontSize: '11px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Tariffa min (€)</label>
             <input type="number" placeholder="0" value={filterMinRate} onChange={e => setFilterMinRate(e.target.value)}
-              style={{ padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', width: '80px' }} />
+              style={{ width: '100%', padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', boxSizing: 'border-box' }} />
           </div>
           <div>
             <label style={{ fontSize: '11px', color: '#5a6b5a', display: 'block', marginBottom: '4px' }}>Tariffa max (€)</label>
             <input type="number" placeholder="200" value={filterMaxRate} onChange={e => setFilterMaxRate(e.target.value)}
-              style={{ padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', width: '80px' }} />
+              style={{ width: '100%', padding: '7px 10px', borderRadius: '6px', border: '0.5px solid rgba(26,46,26,0.18)', fontSize: '13px', boxSizing: 'border-box' }} />
           </div>
           <button onClick={handleFilter}
-            style={{ background: '#0e1e0e', color: '#c8f135', border: 'none', borderRadius: '6px', padding: '8px 20px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}>
+            style={{ background: '#0e1e0e', color: '#c8f135', border: 'none', borderRadius: '6px', padding: '8px 20px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', gridColumn: isMobile ? 'span 2' : 'auto' }}>
             Filtra
           </button>
         </div>
@@ -109,7 +111,11 @@ function ProfessionalsPage() {
         ) : professionals.length === 0 ? (
           <p style={{ color: '#5a6b5a' }}>Nessun professionista trovato con questi filtri.</p>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+            gap: '12px',
+          }}>
             {professionals.map(pro => (
               <div key={pro._id}
                 onClick={() => navigate(`/professionals/${pro._id}`)}
@@ -161,7 +167,7 @@ function ProfessionalsPage() {
 
                 {/* DESTRA */}
                 <div style={{
-                  flex: 1, padding: '14px 16px',
+                  flex: 1, padding: '12px 14px',
                   display: 'flex', flexDirection: 'column',
                   justifyContent: 'space-between', minWidth: 0,
                 }}>
@@ -176,12 +182,12 @@ function ProfessionalsPage() {
                       <div style={{
                         background: 'rgba(26,46,26,0.06)', color: '#3B6D11',
                         fontSize: '10px', padding: '2px 8px', borderRadius: '999px',
-                        display: 'inline-block', marginBottom: '6px', textTransform: 'capitalize',
+                        display: 'inline-block', marginBottom: '4px', textTransform: 'capitalize',
                       }}>
                         {pro.category}
                       </div>
                     )}
-                    {pro.bio && (
+                    {pro.bio && !isMobile && (
                       <div style={{
                         fontSize: '11px', color: '#5a6b5a', lineHeight: '1.5',
                         display: '-webkit-box', WebkitLineClamp: 2,
@@ -206,7 +212,7 @@ function ProfessionalsPage() {
                       style={{
                         background: '#0e1e0e', color: '#c8f135',
                         border: 'none', borderRadius: '6px',
-                        padding: '6px 14px', fontSize: '12px',
+                        padding: '6px 10px', fontSize: '11px',
                         fontWeight: '500', cursor: 'pointer',
                         whiteSpace: 'nowrap',
                       }}>

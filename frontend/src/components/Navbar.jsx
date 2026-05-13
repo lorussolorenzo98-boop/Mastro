@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function Navbar() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
 
@@ -31,10 +33,13 @@ function Navbar() {
         Mastr<span style={{ color: '#c8f135' }}>o</span>
       </Link>
 
-      <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-        <Link to="/professionals" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.65)', textDecoration: 'none' }}>
-          Trova professionisti
-        </Link>
+      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+
+        {!isMobile && (
+          <Link to="/professionals" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.65)', textDecoration: 'none' }}>
+            Trova professionisti
+          </Link>
+        )}
 
         {user ? (
           <div ref={dropdownRef} style={{ position: 'relative' }}>
@@ -48,9 +53,11 @@ function Navbar() {
                   `${user.firstname?.[0]}${user.lastname?.[0] || ''}`
                 )}
               </div>
-              <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)' }}>
-                {user.firstname}
-              </span>
+              {!isMobile && (
+                <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)' }}>
+                  {user.firstname}
+                </span>
+              )}
               <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>▾</span>
             </button>
 
@@ -60,6 +67,16 @@ function Navbar() {
                   <div style={{ fontSize: '14px', fontWeight: '500', color: '#1a2e1a' }}>{user.firstname}</div>
                   <div style={{ fontSize: '12px', color: '#5a6b5a', marginTop: '2px' }}>{user.email}</div>
                 </div>
+
+                {isMobile && (
+                  <div
+                    onClick={() => { navigate('/professionals'); setDropdownOpen(false) }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', fontSize: '14px', color: '#1a2e1a', cursor: 'pointer', borderBottom: '0.5px solid rgba(26,46,26,0.06)' }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#f7f7f5'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    Trova professionisti
+                  </div>
+                )}
 
                 <div
                   onClick={() => { navigate(user.role === 'professional' ? '/dashboard/professional' : '/dashboard'); setDropdownOpen(false) }}
@@ -91,10 +108,10 @@ function Navbar() {
           </div>
         ) : (
           <>
-            <Link to="/login" style={{ background: '#fff', color: '#1a2e1a', border: 'none', borderRadius: '6px', padding: '8px 18px', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>
+            <Link to="/login" style={{ background: '#fff', color: '#1a2e1a', borderRadius: '6px', padding: isMobile ? '7px 10px' : '8px 14px', fontSize: isMobile ? '13px' : '14px', fontWeight: '500', textDecoration: 'none' }}>
               Accedi
             </Link>
-            <Link to="/register" style={{ background: '#c8f135', color: '#1a2e1a', border: 'none', borderRadius: '6px', padding: '8px 18px', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>
+            <Link to="/register" style={{ background: '#c8f135', color: '#1a2e1a', borderRadius: '6px', padding: isMobile ? '7px 10px' : '8px 14px', fontSize: isMobile ? '13px' : '14px', fontWeight: '500', textDecoration: 'none' }}>
               Registrati
             </Link>
           </>

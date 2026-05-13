@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import Footer from '../components/Footer'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function DashboardClientePage() {
   const { user, token } = useAuth()
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('all')
@@ -45,9 +47,9 @@ function DashboardClientePage() {
   }
 
   const metrics = [
-    { label: 'Totale',      value: bookings.length,                                       accent: '#c8f135' },
-    { label: 'In attesa',   value: bookings.filter(b => b.status === 'pending').length,   accent: '#EF9F27' },
-    { label: 'Completate',  value: bookings.filter(b => b.status === 'completed').length, accent: '#378ADD' },
+    { label: 'Totale',     value: bookings.length,                                       accent: '#c8f135' },
+    { label: 'In attesa',  value: bookings.filter(b => b.status === 'pending').length,   accent: '#EF9F27' },
+    { label: 'Completate', value: bookings.filter(b => b.status === 'completed').length, accent: '#378ADD' },
   ]
 
   const tabs = [
@@ -63,11 +65,11 @@ function DashboardClientePage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f0f4ee', display: 'flex', flexDirection: 'column' }}>
 
-      <div style={{ flex: 1, maxWidth: '900px', width: '100%', margin: '0 auto', padding: '32px 24px' }}>
+      <div style={{ flex: 1, maxWidth: '900px', width: '100%', margin: '0 auto', padding: isMobile ? '16px' : '32px 24px' }}>
 
         {/* HEADER */}
         <div style={{ marginBottom: '24px' }}>
-          <h1 style={{ fontSize: '22px', fontWeight: '500', color: '#0e1e0e', marginBottom: '4px' }}>
+          <h1 style={{ fontSize: isMobile ? '18px' : '22px', fontWeight: '500', color: '#0e1e0e', marginBottom: '4px' }}>
             Le mie prenotazioni
           </h1>
           <p style={{ fontSize: '14px', color: '#5a6b5a', margin: 0 }}>
@@ -76,7 +78,12 @@ function DashboardClientePage() {
         </div>
 
         {/* METRICHE */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+          gap: '10px',
+          marginBottom: '24px',
+        }}>
           {metrics.map(m => (
             <div key={m.label} style={{
               background: '#fff',
@@ -92,14 +99,20 @@ function DashboardClientePage() {
         </div>
 
         {/* TABS */}
-        <div style={{ display: 'flex', borderBottom: '0.5px solid rgba(26,46,26,0.14)', marginBottom: '20px' }}>
+        <div style={{
+          display: 'flex',
+          borderBottom: '0.5px solid rgba(26,46,26,0.14)',
+          marginBottom: '20px',
+          overflowX: 'auto',
+        }}>
           {tabs.map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
-              padding: '10px 20px',
-              fontSize: '14px',
+              padding: isMobile ? '10px 12px' : '10px 20px',
+              fontSize: isMobile ? '13px' : '14px',
               border: 'none',
               background: 'transparent',
               cursor: 'pointer',
+              whiteSpace: 'nowrap',
               borderBottom: activeTab === tab.key ? '2px solid #0e1e0e' : '2px solid transparent',
               color: activeTab === tab.key ? '#0e1e0e' : '#5a6b5a',
               fontWeight: activeTab === tab.key ? '500' : '400',
@@ -133,10 +146,10 @@ function DashboardClientePage() {
                 background: '#fff',
                 border: '0.5px solid rgba(26,46,26,0.14)',
                 borderRadius: '12px',
-                padding: '18px 20px',
+                padding: isMobile ? '14px' : '18px 20px',
               }}>
 
-                {/* TOP: avatar + info professionista + badge */}
+                {/* TOP */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div style={{
@@ -160,13 +173,13 @@ function DashboardClientePage() {
                     fontSize: '11px', padding: '4px 12px', borderRadius: '999px',
                     background: statusLabel[booking.status]?.bg,
                     color: statusLabel[booking.status]?.color,
-                    fontWeight: '500',
+                    fontWeight: '500', flexShrink: 0,
                   }}>
                     {statusLabel[booking.status]?.label}
                   </span>
                 </div>
 
-                {/* DETTAGLI */}
+                {/* DESCRIZIONE */}
                 <div style={{
                   background: '#f7f7f5', borderRadius: '6px',
                   padding: '10px 12px', fontSize: '13px', color: '#5a6b5a',
@@ -175,8 +188,14 @@ function DashboardClientePage() {
                   {booking.description}
                 </div>
 
-                {/* BOTTOM: data + indirizzo + importo */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                {/* BOTTOM */}
+                <div style={{
+                  display: 'flex',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  justifyContent: 'space-between',
+                  alignItems: isMobile ? 'flex-start' : 'center',
+                  gap: isMobile ? '6px' : '0',
+                }}>
                   <div style={{ fontSize: '13px', color: '#5a6b5a' }}>
                     {new Date(booking.date).toLocaleDateString('it-IT')} · {booking.timeSlot}
                     &nbsp;·&nbsp;{booking.address}

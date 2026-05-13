@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Footer from '../components/Footer'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function ProfessionalDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
   const [professional, setProfessional] = useState(null)
   const [loading, setLoading] = useState(true)
   const [selectedDate, setSelectedDate] = useState('')
@@ -32,7 +34,7 @@ function ProfessionalDetailPage() {
       alert('Seleziona una data e una fascia oraria')
       return
     }
-    navigate(`/booking/${id}?date=${selectedDate}&slot=${selectedSlot}`)
+    navigate(`/booking/${id}?date=${selectedDate}&slot=${selectedSlot}&amount=${professional.hourlyRate}`)
   }
 
   if (loading) return <p style={{ padding: '24px' }}>Caricamento...</p>
@@ -41,7 +43,7 @@ function ProfessionalDetailPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f0f4ee', display: 'flex', flexDirection: 'column' }}>
 
-      <div style={{ flex: 1, maxWidth: '1000px', width: '100%', margin: '0 auto', padding: '24px' }}>
+      <div style={{ flex: 1, maxWidth: '1000px', width: '100%', margin: '0 auto', padding: isMobile ? '16px' : '24px' }}>
 
         {/* BACK */}
         <button onClick={() => navigate(-1)} style={{
@@ -53,7 +55,12 @@ function ProfessionalDetailPage() {
           ← Torna alla ricerca
         </button>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '16px', alignItems: 'start' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 300px',
+          gap: '16px',
+          alignItems: 'start',
+        }}>
 
           {/* COLONNA SINISTRA */}
           <div>
@@ -65,20 +72,20 @@ function ProfessionalDetailPage() {
               display: 'flex', marginBottom: '12px',
             }}>
               <div style={{
-                width: '110px', minWidth: '110px', background: '#0e1e0e',
+                width: '100px', minWidth: '100px', background: '#0e1e0e',
                 display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center',
-                gap: '8px', padding: '20px 12px',
+                gap: '8px', padding: '20px 10px',
               }}>
                 {professional.userId?.avatar ? (
                   <img src={professional.userId.avatar} alt="avatar"
-                    style={{ width: '68px', height: '68px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid rgba(200,241,53,0.25)' }} />
+                    style={{ width: '62px', height: '62px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid rgba(200,241,53,0.25)' }} />
                 ) : (
                   <div style={{
-                    width: '68px', height: '68px', borderRadius: '50%',
+                    width: '62px', height: '62px', borderRadius: '50%',
                     background: '#1a2e1a', border: '1.5px solid rgba(200,241,53,0.25)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '22px', fontWeight: '500', color: '#c8f135',
+                    fontSize: '20px', fontWeight: '500', color: '#c8f135',
                   }}>
                     {professional.userId?.firstname?.[0]}{professional.userId?.surname?.[0]}
                   </div>
@@ -91,11 +98,11 @@ function ProfessionalDetailPage() {
                   {professional.category}
                 </div>
               </div>
-              <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <h1 style={{ fontSize: '20px', fontWeight: '500', color: '#0e1e0e', marginBottom: '4px' }}>
+              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <h1 style={{ fontSize: isMobile ? '17px' : '20px', fontWeight: '500', color: '#0e1e0e', marginBottom: '4px' }}>
                   {professional.userId?.firstname} {professional.userId?.surname}
                 </h1>
-                <div style={{ fontSize: '13px', color: '#5a6b5a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div style={{ fontSize: '13px', color: '#5a6b5a', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   📍 {professional.city}
                 </div>
                 <div style={{ fontSize: '12px', color: '#BA7517' }}>
@@ -123,10 +130,10 @@ function ProfessionalDetailPage() {
               <h2 style={{ fontSize: '14px', fontWeight: '500', color: '#0e1e0e', marginBottom: '14px' }}>Informazioni</h2>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 {[
-                  { label: 'Categoria', value: professional.category },
-                  { label: 'Città', value: professional.city },
+                  { label: 'Categoria',     value: professional.category },
+                  { label: 'Città',         value: professional.city },
                   { label: 'Tariffa oraria', value: `${professional.hourlyRate}€ / ora` },
-                  { label: 'Valutazione', value: `${professional.rating} / 5` },
+                  { label: 'Valutazione',   value: `${professional.rating} / 5` },
                 ].map(item => (
                   <div key={item.label}>
                     <div style={{ fontSize: '11px', color: '#5a6b5a', marginBottom: '3px' }}>{item.label}</div>
@@ -142,7 +149,8 @@ function ProfessionalDetailPage() {
           <div style={{
             background: '#fff', border: '0.5px solid rgba(26,46,26,0.14)',
             borderRadius: '12px', padding: '18px',
-            position: 'sticky', top: '24px',
+            position: isMobile ? 'static' : 'sticky',
+            top: '24px',
           }}>
             <div style={{ fontSize: '28px', fontWeight: '500', color: '#0e1e0e', marginBottom: '4px' }}>
               {professional.hourlyRate}€ <span style={{ fontSize: '14px', fontWeight: '400', color: '#5a6b5a' }}>/ ora</span>
@@ -163,10 +171,15 @@ function ProfessionalDetailPage() {
             <label style={{ fontSize: '13px', fontWeight: '500', display: 'block', marginBottom: '7px', color: '#0e1e0e' }}>
               Fascia oraria
             </label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '16px' }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : '1fr 1fr',
+              gap: '6px',
+              marginBottom: '16px',
+            }}>
               {slots.map(slot => (
                 <button key={slot} onClick={() => setSelectedSlot(slot)} style={{
-                  padding: '8px', borderRadius: '7px', fontSize: '13px', cursor: 'pointer',
+                  padding: '8px 4px', borderRadius: '7px', fontSize: '12px', cursor: 'pointer',
                   border: `0.5px solid ${selectedSlot === slot ? '#0e1e0e' : 'rgba(26,46,26,0.18)'}`,
                   background: selectedSlot === slot ? '#0e1e0e' : '#fff',
                   color: selectedSlot === slot ? '#c8f135' : '#0e1e0e',
