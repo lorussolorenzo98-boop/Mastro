@@ -23,7 +23,7 @@ function CreaProfiloPage() {
 
     const checkProfile = async () => {
       try {
-        const res = await axios.get('${import.meta.env.VITE_API_URL}/api/professionals/me', {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/professionals/me`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.data.length > 0) navigate('/dashboard/professional')
@@ -44,7 +44,7 @@ function CreaProfiloPage() {
     setLoading(true)
 
     try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/professionals',
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/professionals`,
         { ...formData, hourlyRate: Number(formData.hourlyRate) },
         { headers: { Authorization: `Bearer ${token}` } }
       )

@@ -102,10 +102,10 @@ function DashboardProfessionistaPage() {
     setLoading(true)
     try {
       const [bookingsRes, profRes] = await Promise.all([
-        axios.get('${import.meta.env.VITE_API_URL}/api/bookings/professional', {
+        axios.get(`${import.meta.env.VITE_API_URL}/api/bookings/professional`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('${import.meta.env.VITE_API_URL}/api/professionals/me', {
+        axios.get(`${import.meta.env.VITE_API_URL}/api/professionals/me`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ])
@@ -159,7 +159,7 @@ function DashboardProfessionistaPage() {
     if (!createForm.city || !createForm.hourlyRate) return
     setCreateLoading(true)
     try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/professionals',
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/professionals`,
         { ...createForm, hourlyRate: Number(createForm.hourlyRate) },
         { headers: { Authorization: `Bearer ${token}` } }
       )

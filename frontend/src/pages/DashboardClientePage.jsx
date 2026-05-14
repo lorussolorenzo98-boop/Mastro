@@ -26,7 +26,7 @@ function DashboardClientePage() {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/bookings/me', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/bookings/me`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setBookings(res.data)
@@ -39,7 +39,7 @@ function DashboardClientePage() {
 
   const fetchMyReviews = async () => {
     try {
-      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/reviews/my', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/my`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setReviewedBookingIds(new Set(res.data.map(r => r.bookingId)))
@@ -51,7 +51,7 @@ function DashboardClientePage() {
   const submitReview = async (bookingId) => {
     setReviewLoading(true)
     try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/reviews',
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/reviews`,
         { bookingId, rating: reviewForm.rating, comment: reviewForm.comment },
         { headers: { Authorization: `Bearer ${token}` } }
       )
