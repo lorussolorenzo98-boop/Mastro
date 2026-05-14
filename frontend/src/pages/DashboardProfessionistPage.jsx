@@ -102,10 +102,10 @@ function DashboardProfessionistaPage() {
     setLoading(true)
     try {
       const [bookingsRes, profRes] = await Promise.all([
-        axios.get('http://localhost:3000/api/bookings/professional', {
+        axios.get('${import.meta.env.VITE_API_URL}/api/bookings/professional', {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('http://localhost:3000/api/professionals/me', {
+        axios.get('${import.meta.env.VITE_API_URL}/api/professionals/me', {
           headers: { Authorization: `Bearer ${token}` }
         })
       ])
@@ -128,7 +128,7 @@ function DashboardProfessionistaPage() {
   const handleEditSave = async (id) => {
     setEditLoading(true)
     try {
-      await axios.put(`http://localhost:3000/api/professionals/${id}`,
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/professionals/${id}`,
         { ...editForm, hourlyRate: Number(editForm.hourlyRate) },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -145,7 +145,7 @@ function DashboardProfessionistaPage() {
   const handleDelete = async (id) => {
     if (!window.confirm('Sei sicuro di voler eliminare questo annuncio?')) return
     try {
-      await axios.delete(`http://localhost:3000/api/professionals/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/professionals/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       showSuccess('Annuncio eliminato.')
@@ -159,7 +159,7 @@ function DashboardProfessionistaPage() {
     if (!createForm.city || !createForm.hourlyRate) return
     setCreateLoading(true)
     try {
-      await axios.post('http://localhost:3000/api/professionals',
+      await axios.post('${import.meta.env.VITE_API_URL}/api/professionals',
         { ...createForm, hourlyRate: Number(createForm.hourlyRate) },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -181,7 +181,7 @@ function DashboardProfessionistaPage() {
 
   const updateStatus = async (bookingId, status) => {
     try {
-      await axios.put(`http://localhost:3000/api/bookings/${bookingId}/status`,
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/bookings/${bookingId}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       )

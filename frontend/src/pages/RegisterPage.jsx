@@ -35,12 +35,12 @@ function RegisterPage() {
       if (avatarFile) {
         const formDataImg = new FormData()
         formDataImg.append('avatar', avatarFile)
-        const uploadRes = await axios.post('http://localhost:3000/api/upload/avatar', formDataImg, {
+        const uploadRes = await axios.post('${import.meta.env.VITE_API_URL}/api/upload/avatar', formDataImg, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         avatarUrl = uploadRes.data.url
       }
-      const res = await axios.post('http://localhost:3000/api/auth/register', { ...formData, avatar: avatarUrl })
+      const res = await axios.post('${import.meta.env.VITE_API_URL}/api/auth/register', { ...formData, avatar: avatarUrl })
       login(res.data.token, res.data.user)
       navigate(formData.role === 'professional' ? '/crea-profilo' : '/')
     } catch (err) {

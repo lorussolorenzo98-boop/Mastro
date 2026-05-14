@@ -40,7 +40,7 @@ function ProfiloPage() {
     setAvatarPreview(null)
     setAvatarFile(null)
     try {
-      const res = await axios.put('http://localhost:3000/api/auth/profile',
+      const res = await axios.put('${import.meta.env.VITE_API_URL}/api/auth/profile',
         { ...formData, avatar: '' },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -63,13 +63,13 @@ function ProfiloPage() {
       if (avatarFile) {
         const formDataImg = new FormData()
         formDataImg.append('avatar', avatarFile)
-        const uploadRes = await axios.post('http://localhost:3000/api/upload/avatar', formDataImg, {
+        const uploadRes = await axios.post('${import.meta.env.VITE_API_URL}/api/upload/avatar', formDataImg, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         avatarUrl = uploadRes.data.url
       }
 
-      const res = await axios.put('http://localhost:3000/api/auth/profile',
+      const res = await axios.put('${import.meta.env.VITE_API_URL}/api/auth/profile',
         { ...formData, avatar: avatarUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       )

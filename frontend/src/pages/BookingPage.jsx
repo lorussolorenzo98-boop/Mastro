@@ -24,7 +24,7 @@ function CheckoutForm({ professionalId, date, slot, amount }) {
     setLoading(true)
 
     try {
-      const { data } = await axios.post('http://localhost:3000/api/payments/create-intent',
+      const { data } = await axios.post('${import.meta.env.VITE_API_URL}/api/payments/create-intent',
         { amount },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -39,7 +39,7 @@ function CheckoutForm({ professionalId, date, slot, amount }) {
         return
       }
 
-      await axios.post('http://localhost:3000/api/bookings',
+      await axios.post('${import.meta.env.VITE_API_URL}/api/bookings',
         {
           professionalId,
           date,

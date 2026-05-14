@@ -32,7 +32,7 @@ function ProfessionalsPage() {
       if (filterMinRate) params.minRate = filterMinRate
       if (filterMaxRate) params.maxRate = filterMaxRate
 
-      const res = await axios.get('http://localhost:3000/api/professionals', { params })
+      const res = await axios.get('${import.meta.env.VITE_API_URL}/api/professionals', { params })
       setProfessionals(res.data)
     } catch (error) {
       console.error('Errore nel caricamento professionisti:', error)

@@ -20,8 +20,8 @@ function ProfessionalDetailPage() {
     const fetchData = async () => {
       try {
         const [proRes, revRes] = await Promise.all([
-          axios.get(`http://localhost:3000/api/professionals/${id}`),
-          axios.get(`http://localhost:3000/api/reviews/professional/${id}`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/professionals/${id}`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/reviews/professional/${id}`),
         ])
         setProfessional(proRes.data)
         setReviews(revRes.data)
