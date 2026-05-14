@@ -9,6 +9,7 @@ function ProfessionalDetailPage() {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
   const [professional, setProfessional] = useState(null)
+  const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedSlot, setSelectedSlot] = useState('')
@@ -16,17 +17,21 @@ function ProfessionalDetailPage() {
   const slots = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00']
 
   useEffect(() => {
-    const fetchProfessional = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/professionals/${id}`)
-        setProfessional(res.data)
+        const [proRes, revRes] = await Promise.all([
+          axios.get(`http://localhost:3000/api/professionals/${id}`),
+          axios.get(`http://localhost:3000/api/reviews/professional/${id}`),
+        ])
+        setProfessional(proRes.data)
+        setReviews(revRes.data)
       } catch (error) {
         console.error('Errore:', error)
       } finally {
         setLoading(false)
       }
     }
-    fetchProfessional()
+    fetchData()
   }, [id])
 
   const handleBook = () => {
@@ -45,7 +50,6 @@ function ProfessionalDetailPage() {
 
       <div style={{ flex: 1, maxWidth: '1000px', width: '100%', margin: '0 auto', padding: isMobile ? '16px' : '24px' }}>
 
-        {/* BACK */}
         <button onClick={() => navigate(-1)} style={{
           display: 'inline-flex', alignItems: 'center', gap: '6px',
           fontSize: '13px', color: '#5a6b5a', border: 'none',
@@ -125,15 +129,15 @@ function ProfessionalDetailPage() {
             {/* INFO */}
             <div style={{
               background: '#fff', border: '0.5px solid rgba(26,46,26,0.14)',
-              borderRadius: '12px', padding: '18px',
+              borderRadius: '12px', padding: '18px', marginBottom: '12px',
             }}>
               <h2 style={{ fontSize: '14px', fontWeight: '500', color: '#0e1e0e', marginBottom: '14px' }}>Informazioni</h2>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 {[
-                  { label: 'Categoria',     value: professional.category },
-                  { label: 'Città',         value: professional.city },
+                  { label: 'Categoria',      value: professional.category },
+                  { label: 'Città',          value: professional.city },
                   { label: 'Tariffa oraria', value: `${professional.hourlyRate}€ / ora` },
-                  { label: 'Valutazione',   value: `${professional.rating} / 5` },
+                  { label: 'Valutazione',    value: `${professional.rating} / 5` },
                 ].map(item => (
                   <div key={item.label}>
                     <div style={{ fontSize: '11px', color: '#5a6b5a', marginBottom: '3px' }}>{item.label}</div>
@@ -141,6 +145,64 @@ function ProfessionalDetailPage() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* RECENSIONI */}
+            <div style={{
+              background: '#fff', border: '0.5px solid rgba(26,46,26,0.14)',
+              borderRadius: '12px', padding: '18px',
+            }}>
+              <h2 style={{ fontSize: '14px', fontWeight: '500', color: '#0e1e0e', marginBottom: '16px' }}>
+                Recensioni ({reviews.length})
+              </h2>
+
+              {reviews.length === 0 ? (
+                <p style={{ fontSize: '13px', color: '#5a6b5a', margin: 0 }}>
+                  Nessuna recensione ancora.
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {reviews.map(review => (
+                    <div key={review._id} style={{
+                      borderBottom: '0.5px solid rgba(26,46,26,0.08)',
+                      paddingBottom: '12px',
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{
+                            width: '32px', height: '32px', borderRadius: '50%',
+                            background: '#E1F5EE', display: 'flex', alignItems: 'center',
+                            justifyContent: 'center', fontSize: '12px', fontWeight: '500',
+                            color: '#0F6E56', flexShrink: 0, overflow: 'hidden',
+                          }}>
+                            {review.clientId?.avatar ? (
+                              <img src={review.clientId.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              `${review.clientId?.firstname?.[0]}${review.clientId?.surname?.[0]}`
+                            )}
+                          </div>
+                          <div style={{ fontSize: '13px', fontWeight: '500', color: '#0e1e0e' }}>
+                            {review.clientId?.firstname} {review.clientId?.surname}
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '12px', color: '#BA7517' }}>
+                            {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                          </span>
+                          <span style={{ fontSize: '11px', color: '#5a6b5a' }}>
+                            {new Date(review.createdAt).toLocaleDateString('it-IT')}
+                          </span>
+                        </div>
+                      </div>
+                      {review.comment && (
+                        <p style={{ fontSize: '13px', color: '#5a6b5a', lineHeight: '1.6', margin: 0, paddingLeft: '40px' }}>
+                          {review.comment}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
           </div>
@@ -174,8 +236,7 @@ function ProfessionalDetailPage() {
             <div style={{
               display: 'grid',
               gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : '1fr 1fr',
-              gap: '6px',
-              marginBottom: '16px',
+              gap: '6px', marginBottom: '16px',
             }}>
               {slots.map(slot => (
                 <button key={slot} onClick={() => setSelectedSlot(slot)} style={{

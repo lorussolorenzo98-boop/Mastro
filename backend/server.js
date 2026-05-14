@@ -7,6 +7,7 @@ import professionalRoutes from './routes/professionals.js'
 import bookingRoutes from './routes/bookings.js'
 import paymentRoutes from './routes/payments.js'
 import uploadRoutes from './routes/upload.js'
+import reviewRoutes from './routes/reviews.js'
 
 
 dotenv.config();
@@ -21,6 +22,8 @@ app.use('/api/professionals', professionalRoutes)
 app.use('/api/bookings', bookingRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/upload', uploadRoutes)
+app.use('/api/reviews', reviewRoutes)
+
 
 
 

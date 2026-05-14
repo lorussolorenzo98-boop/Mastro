@@ -23,12 +23,12 @@ function CreaProfiloPage() {
 
     const checkProfile = async () => {
       try {
-        await axios.get('http://localhost:3000/api/professionals/me', {
+        const res = await axios.get('http://localhost:3000/api/professionals/me', {
           headers: { Authorization: `Bearer ${token}` }
         })
-        navigate('/dashboard/professional')
+        if (res.data.length > 0) navigate('/dashboard/professional')
       } catch {
-        // non ha profilo, rimani qui
+        // nessun profilo, rimani qui
       }
     }
     checkProfile()
